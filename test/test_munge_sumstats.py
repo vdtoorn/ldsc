@@ -6,7 +6,7 @@ import pandas as pd
 import nose
 from pandas.util.testing import assert_series_equal
 from pandas.util.testing import assert_frame_equal
-from numpy.testing import assert_array_equal, assert_array_almost_equal, assert_allclose
+from numpy.testing import assert_allclose
 
 
 class Mock(object):

@@ -29,6 +29,7 @@ def print_ld(x, fh, M):
     y.to_csv(fh + '2' + l2, sep='\t', index=False, float_format='%.3f')
     print('\t'.join((str(x / 2) for x in M)), file=open(fh + '2' + m, 'wb'))
 
+
 two_ldsc = np.abs(100 * np.random.normal(size=2 * N_SNP)).reshape((N_SNP, 2))
 single_ldsc = np.sum(two_ldsc, axis=1).reshape((N_SNP, 1))
 M_two = np.sum(two_ldsc, axis=0)

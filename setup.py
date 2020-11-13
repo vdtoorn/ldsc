@@ -1,20 +1,20 @@
 from setuptools import setup
 
 setup(name='ldsc',
-      version='1.0',
+      version='1.0.2',
       description='LD Score Regression (LDSC)',
-      url='http://github.com/bulik/ldsc',
-      author='Brendan Bulik-Sullivan and Hilary Finucane',
+      url='http://github.com/vdtoorn/ldsc',
+      author='Brendan Bulik-Sullivan and Hilary Finucane, converted to Python3 by Henk van den Toorn',
       author_email='',
       license='GPLv3',
       packages=['ldscore'],
       scripts=['ldsc.py', 'munge_sumstats.py'],
       install_requires = [
-            'bitarray>=0.8,<0.9',
-            'nose>=1.3,<1.4',
-            'pybedtools>=0.7,<0.8',
-            'scipy>=0.18,<0.19',
-            'numpy>=1.16,<1.17',
-            'pandas>=0.20,<0.21'
+            'bitarray>=0.8',
+            'nose>=1.3',
+            'pybedtools>=0.7',
+            'scipy>=0.18',
+            'numpy>=1.16',
+            'pandas>=0.20'
       ]
 )

@@ -336,7 +336,7 @@ def ldscore(args, log):
             print_snps = pd.read_csv(args.print_snps, header=None)
         if len(print_snps.columns) > 1:
             raise ValueError('--print-snps must refer to a file with a one column of SNP IDs.')
-        log.log('Reading list of {N} SNPs for which to print LD Scores from {F}'.format(\
+        log.log('Reading list of {N} SNPs for which to print LD Scores from {F}'.format(
                         F=args.print_snps, N=len(print_snps)))
 
         print_snps.columns=['SNP']

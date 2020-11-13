@@ -2,7 +2,6 @@
 from ldscore.irwls import IRWLS
 import unittest
 import numpy as np
-import nose
 from numpy.testing import assert_array_equal, assert_array_almost_equal
 from nose.tools import assert_raises
 

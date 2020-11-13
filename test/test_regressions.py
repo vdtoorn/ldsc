@@ -1,10 +1,10 @@
-
 import ldscore.regressions as reg
 import unittest
 import numpy as np
 import nose
 from numpy.testing import assert_array_equal, assert_array_almost_equal
 from nose.tools import assert_raises, assert_equal
+
 np.set_printoptions(precision=4)
 
 
@@ -194,8 +194,8 @@ class Test_Hsq_2D(unittest.TestCase):
     def test_summary(self):
         # not much to test; we can at least make sure no errors at runtime
         self.hsq.summary(['asdf', 'qwer'])
-	# change to random 7/30/2019 to avoid inconsistent singular matrix errors
-        self.ld += np.random.normal(scale=0.1, size=(17,2))
+        # change to random 7/30/2019 to avoid inconsistent singular matrix errors
+        self.ld += np.random.normal(scale=0.1, size=(17, 2))
         self.chisq += np.arange(17).reshape((17, 1))
         hsq = reg.Hsq(
             self.chisq, self.ld, self.w_ld, self.N, self.M, n_blocks=3)
