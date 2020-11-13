@@ -12,7 +12,7 @@ import pandas as pd
 from scipy.stats import chi2
 
 from ldscore import sumstats
-from ldscore.common import *
+from ldscore.common import __version__, MASTHEAD, Logger, sec_to_str
 
 np.seterr(invalid='ignore')
 
@@ -544,6 +544,7 @@ def munge_sumstats(args, p=True):
             opts = vars(args)
             non_defaults = [x for x in list(opts.keys()) if opts[x] != defaults[x]]
             header = MASTHEAD
+            header += "munge_sumstats  version" + __version__
             header += "Call: \n"
             header += './munge_sumstats.py \\\n'
             options = ['--' + x.replace('_', '-') + ' ' + str(opts[x]) + ' \\' for x in non_defaults]

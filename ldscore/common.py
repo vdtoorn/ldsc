@@ -4,7 +4,7 @@ from functools import reduce
 
 MASTHEAD = "*********************************************************************\n"
 
-__version__ = '1.0.8'
+__version__ = '1.0.9'
 
 def sec_to_str(t):
     """Convert seconds to days:hours:minutes:seconds"""

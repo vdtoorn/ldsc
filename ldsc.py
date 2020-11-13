@@ -24,7 +24,7 @@ import ldscore.ldscore as ld
 import ldscore.parse as ps
 import ldscore.regressions as reg
 import ldscore.sumstats as sumstats
-from ldscore.common import *
+from ldscore.common import __version__, MASTHEAD, sec_to_str, Logger
 
 try:
     x = pd.DataFrame({'A': [1, 2, 3]})
