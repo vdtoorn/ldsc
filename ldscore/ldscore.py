@@ -1,6 +1,6 @@
+import bitarray as ba
 import numpy as np
 import pandas as pd
-import bitarray as ba
 
 
 def getBlockLefts(coords : pd.array, max_dist : pd.array):

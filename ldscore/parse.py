@@ -6,10 +6,11 @@ This module contains functions for parsing various ldsc-defined file formats.
 """
 
 
+import glob
+import os
+
 import numpy as np
 import pandas as pd
-import os
-import glob
 
 
 def series_eq(x : pd.array, y: pd.array):

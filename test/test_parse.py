@@ -1,10 +1,12 @@
 
-from ldscore import parse as ps
+import os
+
 import numpy as np
 import pandas as pd
-import os
 from nose.tools import *
 from numpy.testing import assert_array_equal
+
+from ldscore import parse as ps
 
 DIR = os.path.dirname(__file__)
 
