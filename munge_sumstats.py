@@ -11,10 +11,8 @@ import numpy as np
 import pandas as pd
 from scipy.stats import chi2
 
-from ldsc import sec_to_str
 from ldscore import sumstats
-
-from common import *
+from ldscore.common import *
 
 np.seterr(invalid='ignore')
 

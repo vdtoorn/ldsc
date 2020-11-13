@@ -1,6 +1,6 @@
 from setuptools import setup
 
-from common import __version__
+from ldscore.common import __version__
 
 setup(name='ldsc',
       version=__version__,
