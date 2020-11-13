@@ -331,6 +331,9 @@ class LD_Score_Regression(object):
                             ['est', 'jknife_se', 'jknife_est', 'jknife_var', 'jknife_cov', 'delete_values'])
         return jknife(est, jknife_se, jknife_est, jknife_var, jknife_cov, delete_values)
 
+    def _update_weights(self, x_tot, w, N, M_tot, tot_agg, intercept):
+        raise NotImplementedError
+
 
 class Hsq(LD_Score_Regression):
 

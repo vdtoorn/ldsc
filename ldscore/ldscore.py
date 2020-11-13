@@ -1,9 +1,10 @@
 import numpy as np
+import pandas as pd
 import bitarray as ba
 
 
-def getBlockLefts(coords, max_dist):
-    '''
+def getBlockLefts(coords : pd.array, max_dist : pd.array):
+    """
     Converts coordinates + max block length to the a list of coordinates of the leftmost
     SNPs to be included in blocks.
 
@@ -19,7 +20,7 @@ def getBlockLefts(coords, max_dist):
     block_left : 1D np.ndarray with same length as block_left
         block_left[j] :=  min{k | dist(j, k) < max_dist}.
 
-    '''
+    """
     M = len(coords)
     j = 0
     block_left = np.zeros(M)
@@ -32,13 +33,13 @@ def getBlockLefts(coords, max_dist):
     return block_left
 
 
-def block_left_to_right(block_left):
-    '''
+def block_left_to_right(block_left:list):
+    """
     Converts block lefts to block rights.
 
     Parameters
     ----------
-    block_left : array
+    block_left : list
         Array of block lefts.
 
     Returns
@@ -46,7 +47,7 @@ def block_left_to_right(block_left):
     block_right : 1D np.ndarray with same length as block_left
         block_right[j] := max {k | block_left[k] <= j}
 
-    '''
+    """
     M = len(block_left)
     j = 0
     block_right = np.zeros(M)
@@ -60,10 +61,10 @@ def block_left_to_right(block_left):
 
 
 class __GenotypeArrayInMemory__(object):
-    '''
+    """
     Parent class for various classes containing interfaces for files with genotype
     matrices, e.g., plink .bed files, etc
-    '''
+    """
 
     def __init__(self, fname, n, snp_list, keep_snps=None, keep_indivs=None, mafMin=None):
         self.m = len(snp_list.IDList)
@@ -81,8 +82,7 @@ class __GenotypeArrayInMemory__(object):
             if np.any(keep_indivs > self.n):
                 raise ValueError('keep_indivs indices out of bounds')
 
-            (self.geno, self.m, self.n) = self.__filter_indivs__(self.geno, keep_indivs, self.m,
-                                                                 self.n)
+            (self.geno, self.m, self.n) = self.__filter_indivs__(self.geno, keep_indivs, self.m, self.n)
 
             if self.n > 0:
                 print('After filtering, {n} individuals remain'.format(n=self.n))
@@ -112,22 +112,24 @@ class __GenotypeArrayInMemory__(object):
     def __read__(self, fname, m, n):
         raise NotImplementedError
 
-    def __filter_indivs__(geno, keep_indivs, m, n):
+    def __filter_indivs__(self, geno, keep_indivs, m, n):
         raise NotImplementedError
 
-    def __filter_maf_(geno, m, n, maf):
+    def __filter_maf__(self, geno, m, n, maf):
+        raise NotImplementedError
+
+    def __filter_snps_maf__(self, geno, m, n, mafmin, keep_snps):
         raise NotImplementedError
 
     def ldScoreVarBlocks(self, block_left, c, annot=None):
-        '''Computes an unbiased estimate of L2(j) for j=1,..,M.'''
+        """Computes an unbiased estimate of L2(j) for j=1,..,M."""
         func = lambda x: self.__l2_unbiased__(x, self.n)
-        snp_getter = self.nextSNPs
-        return self.__corSumVarBlocks__(block_left, c, func, snp_getter, annot)
+
+        return self.__corSumVarBlocks__(block_left, c, func, annot)
 
     def ldScoreBlockJackknife(self, block_left, c, annot=None, jN=10):
         func = lambda x: np.square(x)
-        snp_getter = self.nextSNPs
-        return self.__corSumBlockJackknife__(block_left, c, func, snp_getter, annot, jN)
+        return self.__corSumBlockJackknife__(block_left, c, func, annot, jN)
 
     def __l2_unbiased__(self, x, n):
         denom = n - 2 if n > 2 else n  # allow n<2 for testing purposes
@@ -135,8 +137,8 @@ class __GenotypeArrayInMemory__(object):
         return sq - (1 - sq) / denom
 
     # general methods for calculating sums of Pearson correlation coefficients
-    def __corSumVarBlocks__(self, block_left, c, func, snp_getter, annot=None):
-        '''
+    def __corSumVarBlocks__(self, block_left, c, func, annot=None):
+        """
         Parameters
         ----------
         block_left : np.ndarray with shape (M, )
@@ -162,7 +164,7 @@ class __GenotypeArrayInMemory__(object):
         cor_sum : np.ndarray with shape (M, num_annots)
             Estimates.
 
-        '''
+        """
         m, n = self.m, self.n
         block_sizes = np.array(np.arange(m) - block_left)
         block_sizes = np.ceil(block_sizes / c) * c
@@ -186,7 +188,7 @@ class __GenotypeArrayInMemory__(object):
             c = 1
             b = m
         l_A = 0  # l_A := index of leftmost SNP in matrix A
-        A = snp_getter(b)
+        A = self.nextSnps(b)
         rfuncAB = np.zeros((b, c))
         rfuncBB = np.zeros((c, c))
         # chunk inside of block
@@ -224,7 +226,7 @@ class __GenotypeArrayInMemory__(object):
             if b != old_b:
                 rfuncAB = np.zeros((b, c))
 
-            B = snp_getter(c)
+            B = self.nextSnps(c)
             p1 = np.all(annot[l_A:l_A + b, :] == 0)
             p2 = np.all(annot[l_B:l_B + c, :] == 0)
             if p1 and p2:
@@ -240,11 +242,14 @@ class __GenotypeArrayInMemory__(object):
 
         return cor_sum
 
+    def __corSumBlockJackknife__(self, block_left, c, func, snp_getter, annot, jN):
+        pass
+
 
 class PlinkBEDFile(__GenotypeArrayInMemory__):
-    '''
+    """
     Interface for Plink .bed format
-    '''
+    """
 
     def __init__(self, fname, n, snp_list, keep_snps=None, keep_indivs=None, mafMin=None):
         self._bedcode = {
@@ -304,7 +309,7 @@ class PlinkBEDFile(__GenotypeArrayInMemory__):
         return (z, m, n_new)
 
     def __filter_snps_maf__(self, geno, m, n, mafMin, keep_snps):
-        '''
+        """
         Credit to Chris Chang and the Plink2 developers for this algorithm
         Modified from plink_filter.c
         https://github.com/chrchang/plink-ng/blob/master/plink_filter.c
@@ -331,7 +336,7 @@ class PlinkBEDFile(__GenotypeArrayInMemory__):
 
         Why does bitarray not have >> ????
 
-        '''
+        """
         nru = self.nru
         m_poly = 0
         y = ba.bitarray()
@@ -359,7 +364,7 @@ class PlinkBEDFile(__GenotypeArrayInMemory__):
         return (y, m_poly, n, kept_snps, freq)
 
     def nextSNPs(self, b, minorRef=None):
-        '''
+        """
         Unpacks the binary array of genotypes and returns an n x b matrix of floats of
         normalized genotypes for the next b SNPs, where n := number of samples.
 
@@ -378,7 +383,7 @@ class PlinkBEDFile(__GenotypeArrayInMemory__):
             not None, then the minor allele will be the positive allele (i.e., two copies
             of the minor allele --> a positive number).
 
-        '''
+        """
 
         try:
             b = int(b)

@@ -16,7 +16,6 @@ import sys
 import traceback
 import copy
 import os
-import glob
 
 
 _N_CHR = 22
@@ -65,7 +64,7 @@ def _select_and_log(x, ii, log, msg):
     return x
 
 
-def smart_merge(x, y):
+def smart_merge(x : pd.array , y : pd.array):
     '''Check if SNP columns are equal. If so, save time by using concat instead of merge.'''
     if len(x) == len(y) and (x.index == y.index).all() and (x.SNP == y.SNP).all():
         x = x.reset_index(drop=True)

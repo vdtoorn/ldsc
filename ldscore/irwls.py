@@ -1,9 +1,9 @@
-'''
+"""
 (c) 2015 Brendan Bulik-Sullivan and Hilary Finucane
 
 Iterativey re-weighted least squares.
 
-'''
+"""
 
 import numpy as np
 from . import jackknife as jk
@@ -11,7 +11,7 @@ from . import jackknife as jk
 
 class IRWLS(object):
 
-    '''
+    """
     Iteratively re-weighted least squares (FLWS).
 
     Parameters
@@ -52,7 +52,7 @@ class IRWLS(object):
     _weight(x, w) :
         Weight x by w.
 
-    '''
+    """
 
     def __init__(self, x, y, update_func, n_blocks, w=None, slow=False, separators=None):
         n, p = jk._check_shape(x, y)
@@ -74,7 +74,7 @@ class IRWLS(object):
 
     @classmethod
     def irwls(cls, x, y, update_func, n_blocks, w, slow=False, separators=None):
-        '''
+        """
         Iteratively re-weighted least squares (IRWLS).
 
         Parameters
@@ -99,7 +99,7 @@ class IRWLS(object):
         jknife : jk.LstsqJackknifeFast
             Block jackknife regression with the final IRWLS weights.
 
-        '''
+        """
         (n, p) = x.shape
         if y.shape != (n, 1):
             raise ValueError(
@@ -130,7 +130,7 @@ class IRWLS(object):
 
     @classmethod
     def wls(cls, x, y, w):
-        '''
+        """
         Weighted least squares.
 
         Parameters
@@ -147,7 +147,7 @@ class IRWLS(object):
         coef : list with four elements (coefficients, residuals, rank, singular values)
             Output of np.linalg.lstsq
 
-        '''
+        """
         (n, p) = x.shape
         if y.shape != (n, 1):
             raise ValueError(
@@ -163,7 +163,7 @@ class IRWLS(object):
 
     @classmethod
     def _weight(cls, x, w):
-        '''
+        """
         Weight x by w.
 
         Parameters
@@ -183,7 +183,7 @@ class IRWLS(object):
         ValueError :
             If any element of w is <= 0 (negative weights are not meaningful in WLS).
 
-        '''
+        """
         if np.any(w <= 0):
             raise ValueError('Weights must be > 0')
         (n, p) = x.shape
