@@ -1,7 +1,9 @@
 from setuptools import setup
 
+from common import __version__
+
 setup(name='ldsc',
-      version='1.0.6',
+      version=__version__,
       description='LD Score Regression (LDSC)',
       url='http://github.com/vdtoorn/ldsc',
       author='Brendan Bulik-Sullivan and Hilary Finucane, converted to Python3 by Henk van den Toorn',
