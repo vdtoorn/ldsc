@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-'''
+"""
 (c) 2014 Brendan Bulik-Sullivan and Hilary Finucane
 
 LDSC is a command line tool for estimating
@@ -7,7 +7,7 @@ LDSC is a command line tool for estimating
     2. heritability / partitioned heritability
     3. genetic covariance / correlation
 
-'''
+"""
 
 import ldscore.ldscore as ld
 import ldscore.parse as ps
@@ -45,7 +45,7 @@ np.set_printoptions(precision=4)
 
 
 def sec_to_str(t):
-    '''Convert seconds to days:hours:minutes:seconds'''
+    """Convert seconds to days:hours:minutes:seconds"""
     [d, h, m, s, n] = reduce(lambda ll, b : divmod(ll[0], b) + ll[1:], [(t, 1), 60, 60, 24])
     f = ''
     if d > 0:
@@ -60,7 +60,7 @@ def sec_to_str(t):
 
 
 def _remove_dtype(x):
-    '''Removes dtype: float64 and dtype: int64 from pandas printouts'''
+    """Removes dtype: float64 and dtype: int64 from pandas printouts"""
     x = str(x)
     x = x.replace('\ndtype: int64', '')
     x = x.replace('\ndtype: float64', '')
@@ -68,19 +68,22 @@ def _remove_dtype(x):
 
 
 class Logger(object):
-    '''
+    """
     Lightweight logging.
     TODO: replace with logging module
 
-    '''
+    """
     def __init__(self, fh):
-        self.log_fh = open(fh, 'wb')
+        self.log_fh = open(fh, 'wt')
+
+    def __del__(self):
+        self.log_fh.close()
 
     def log(self, msg):
-        '''
+        """
         Print to log file and stdout with a single command.
 
-        '''
+        """
         print(msg, file=self.log_fh)
         print(msg)
 
@@ -104,7 +107,7 @@ def __filter__(fname, noun, verb, merge_obj):
         return merged_list
 
 def annot_sort_key(s):
-    '''For use with --cts-bin. Fixes weird pandas crosstab column order.'''
+    """For use with --cts-bin. Fixes weird pandas crosstab column order."""
     if type(s) == tuple:
         s = [x.split('_')[0] for x in s]
         s = [float(x) if x != 'min' else -float('inf') for x in s]
@@ -118,14 +121,14 @@ def annot_sort_key(s):
     return s
 
 def ldscore(args, log):
-    '''
+    """
     Wrapper function for estimating l1, l1^2, l2 and l4 (+ optionally standard errors) from
     reference panel genotypes.
 
     Annot format is
     chr snp bp cm <annotations>
 
-    '''
+    """
 
     if args.bfile:
         snp_file, snp_obj = args.bfile+'.bim', ps.PlinkBIMFile
